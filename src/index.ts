@@ -1,11 +1,13 @@
 import express from 'express'
 import mongoose from 'mongoose'
+import path from 'path'
 
 import { Item } from './models/Item'
 
 const app = express()
 
 app.set('view engine', 'ejs')
+app.set('views', path.join(__dirname, './views'))
 
 app.use(express.urlencoded({ extended: false }))
 

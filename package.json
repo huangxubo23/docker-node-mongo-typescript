@@ -4,7 +4,7 @@
   "description": "Use MongoDB with Docker to create Node service with TypeScript",
   "main": "src/index.ts",
   "scripts": {
-    "start": "dev:live",
+    "start": "npm run dev:live",
     "dev:live": "nodemon --watch 'src/**/*.ts' --exec \"ts-node\" src/index.ts",
     "build": "rimraf ./dist && tsc",
     "build:ts": "tsc -p ."

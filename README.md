@@ -27,6 +27,9 @@ npm install
 ### Develop
 ```bash
 npm start
+
+# Visit in localhost
+http://localhost:3000/
 ```
 
 ### Build
