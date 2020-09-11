@@ -2,10 +2,10 @@
   "name": "docker-node-mongo-typescript",
   "version": "1.0.0",
   "description": "Use MongoDB with Docker to create Node service with TypeScript",
-  "main": "src/index.ts",
+  "main": "src/server.ts",
   "scripts": {
     "start": "npm run dev:live",
-    "dev:live": "nodemon --watch 'src/**/*.ts' --exec \"ts-node\" src/index.ts",
+    "dev:live": "nodemon --watch 'src/**/*.ts' --exec \"ts-node\" src/server.ts",
     "build": "rimraf ./dist && tsc && npm run copy",
     "debug": "tsc -p . && npm run copy",
     "copy": "ts-node copy.ts"
@@ -25,6 +25,7 @@
     "mongoose": "^5.2.7"
   },
   "devDependencies": {
+    "@types/express": "^4.17.8",
     "@types/mongoose": "^5.7.36",
     "@types/node": "^14.6.4",
     "@types/shelljs": "^0.8.8",

@@ -1,5 +1,10 @@
 import mongoose from 'mongoose'
 
+export type ItemDocument = mongoose.Document & {
+  name: string
+  date: Date
+}
+
 const ItemSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -11,8 +16,4 @@ const ItemSchema = new mongoose.Schema({
   }
 })
 
-const Item = mongoose.model('item', ItemSchema)
-
-export {
-  Item
-}
+export const Item = mongoose.model<ItemDocument>('Item', ItemSchema)

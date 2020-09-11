@@ -32,6 +32,30 @@ npm start
 http://localhost:3000/
 ```
 
+### Debu
+Support for debugging Node services using VS Code.
+支持使用VS Code调试Node服务。
+```bash
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Server",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}/src/server.ts",
+      "preLaunchTask": "npm: debug",
+      "outFiles": [
+        "${workspaceFolder}/dist/**/*.js"
+      ]
+    }
+  ]
+}
+```
+
 ### Build
 ```bash
 npm run build
