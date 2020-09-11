@@ -6,8 +6,9 @@
   "scripts": {
     "start": "npm run dev:live",
     "dev:live": "nodemon --watch 'src/**/*.ts' --exec \"ts-node\" src/index.ts",
-    "build": "rimraf ./dist && tsc",
-    "build:ts": "tsc -p ."
+    "build": "rimraf ./dist && tsc && npm run copy",
+    "debug": "tsc -p . && npm run copy",
+    "copy": "ts-node copy.ts"
   },
   "keywords": [
     "docker",
@@ -26,8 +27,10 @@
   "devDependencies": {
     "@types/mongoose": "^5.7.36",
     "@types/node": "^14.6.4",
+    "@types/shelljs": "^0.8.8",
     "nodemon": "^2.0.4",
     "rimraf": "^3.0.2",
+    "shelljs": "^0.8.4",
     "ts-node": "^9.0.0",
     "typescript": "^4.0.2"
   }
