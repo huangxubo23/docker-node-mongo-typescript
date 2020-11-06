@@ -26,13 +26,13 @@ npm install
 
 ### Develop
 ```bash
-npm start
+npm run dev
 
 # Visit in localhost
 http://localhost:3000/
 ```
 
-### Debu
+### Debug
 Support for debugging Node services using VS Code.
 支持使用VS Code调试Node服务。
 ```bash
@@ -59,4 +59,24 @@ Support for debugging Node services using VS Code.
 ### Build
 ```bash
 npm run build
+```
+
+### Deploy
+```bash
+npm run deploy
+```
+
+### Docker
+#### 构建Docker镜像
+进入到 Dockerfile 所在的那个目录中，运行以下命令构建 Docker 镜像。开关符 -t 让你标记你的镜像，以至于让你以后很容易地用 `docker image ls` 找到它。
+
+```bash
+docker build -t <your username>/<app name> .
+```
+
+构建好后使用`docker image ls`查看镜像列表。
+
+#### 运行Docker镜像
+```bash
+docker run -p 8080:3000 -d <your username>/<app name>
 ```
