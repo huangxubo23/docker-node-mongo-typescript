@@ -6,11 +6,14 @@
   "scripts": {
     "start": "node ./dist/server.js",
     "dev": "npm run dev:live",
-    "dev:live": "nodemon --watch 'src/**/*.ts' --exec \"ts-node\" src/server.ts",
+    "dev:live": "dotenv -e .env.dev nodemon --watch 'src/**/*.ts' --exec \"ts-node\" src/server.ts",
     "build": "rimraf ./dist && tsc && npm run copy",
+    "build:swagger": "tsoa spec-and-routes",
+    "build:routes": "tsoa routes",
     "debug": "tsc -p . && npm run copy",
     "copy": "ts-node copy.ts",
-    "deploy": "npm run build && npm run copy && npm start"
+    "deploy:release": "npm run build:routes && npm run build && dotenv -e .env -- npm run copy && dotenv -e .env -- npm start",
+    "deploy:develop": "npm run build:swagger && npm run build && dotenv -e .env.dev -- npm run copy && dotenv -e .env.dev -- npm start"
   },
   "keywords": [
     "docker",
@@ -22,18 +25,27 @@
   "author": "harry huang",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.19.0",
     "ejs": "^2.6.1",
     "express": "^4.16.3",
-    "mongoose": "^5.2.7"
+    "mongoose": "^5.2.7",
+    "tsoa": "^3.4.0"
   },
   "devDependencies": {
+    "@types/body-parser": "^1.19.0",
+    "@types/errorhandler": "^1.5.0",
     "@types/express": "^4.17.8",
     "@types/mongoose": "^5.7.36",
     "@types/node": "^14.6.4",
     "@types/shelljs": "^0.8.8",
+    "@types/swagger-ui-express": "^4.1.2",
+    "dotenv": "^8.2.0",
+    "dotenv-cli": "^4.0.0",
+    "errorhandler": "^1.5.1",
     "nodemon": "^2.0.4",
     "rimraf": "^3.0.2",
     "shelljs": "^0.8.4",
+    "swagger-ui-express": "^4.1.4",
     "ts-node": "^9.0.0",
     "typescript": "^4.0.2"
   }

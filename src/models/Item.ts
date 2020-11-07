@@ -1,19 +1,25 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
 export type ItemDocument = mongoose.Document & {
-  name: string
-  date: Date
+  id: number,
+  name: string,
+  date: Date,
 }
 
 const ItemSchema = new mongoose.Schema({
+  id: {
+    type: Number,
+    required: true,
+    unique: true,
+  },
   name: {
     type: String,
-    required: true
+    required: true,
   },
   date: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   }
 })
 
-export const Item = mongoose.model<ItemDocument>('Item', ItemSchema)
+export const Item = mongoose.model<ItemDocument>('Item', ItemSchema);
