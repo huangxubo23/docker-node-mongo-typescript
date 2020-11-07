@@ -60,4 +60,23 @@ export class ItemController extends Controller {
       };
     } catch (error) {}
   }
+  
+  /**
+   * 获取商品详情
+   * @param id 商品ID
+   */
+  @Get('detail')
+  public async getDetail(
+    @Query() id?: number | string,
+  ): Promise<CommonResponse<any>> {
+    try {
+      const items = await Item.find();
+      return {
+        success: true,
+        message: '调用成功',
+        code: 10000,
+        data: items[0],
+      };
+    } catch (error) {}
+  }
 }

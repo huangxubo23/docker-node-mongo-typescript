@@ -28,36 +28,52 @@ mongoose
     { useNewUrlParser: true }
   )
   .then(() => console.log('MongoDB Connected'))
-  .catch(err => {
+  .catch((err) => {
     console.log(err);
-  })
+  });
 
 app.get('/', itemController.getItem);
 app.post('/item/add', itemController.addItem);
 if (isDev) {
   const swaggerDocument = require('./swagger-ui/swagger.json');
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  app.use(
+    '/docs',
+    swaggerUi.serve,
+    async (_req: Request, res: Response) => {
+      return res.send(
+        swaggerUi.generateHTML(await import('./swagger-ui/swagger.json'))
+      );
+    }
+  );
   // app.use(errorHandler())
 }
 
 RegisterRoutes(app);
 
-app.use((err: any, req: Request, res: Response, next: NextFunction): Response | void => {
-  if (err instanceof ValidateError) {
-    console.warn(`Caught Validation Error for ${req.path}:`, err.fields);
-    return res.status(422).json({
-      message: 'Validation Failed',
-      data: err?.fields,
-    });
-  }
-  if (err instanceof Error) {
-    return res.status(500).json({
-      message: 'Internal Server Error',
-      data: err
-    });
-  }
+app.use(
+  (
+    err: any,
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Response | void => {
+    if (err instanceof ValidateError) {
+      console.warn(`Caught Validation Error for ${req.path}:`, err.fields);
+      return res.status(422).json({
+        message: 'Validation Failed',
+        data: err?.fields,
+      });
+    }
+    if (err instanceof Error) {
+      return res.status(500).json({
+        message: 'Internal Server Error',
+        data: err,
+      });
+    }
 
-  next();
-})
+    next();
+  }
+);
 
 export default app;

@@ -66,6 +66,29 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"CommonResponse_any_": {
+				"properties": {
+					"success": {
+						"type": "boolean"
+					},
+					"code": {
+						"type": "number",
+						"format": "double"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {}
+				},
+				"required": [
+					"success",
+					"code",
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"User": {
 				"properties": {
 					"id": {
@@ -187,6 +210,37 @@
 						"schema": {
 							"type": "string"
 						}
+					}
+				]
+			}
+		},
+		"/item/detail": {
+			"get": {
+				"operationId": "GetDetail",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonResponse_any_"
+								}
+							}
+						}
+					}
+				},
+				"description": "获取商品详情",
+				"tags": [
+					"Item 商品模块"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "商品ID",
+						"in": "query",
+						"name": "id",
+						"required": false,
+						"schema": {}
 					}
 				]
 			}
