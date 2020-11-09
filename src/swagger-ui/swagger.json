@@ -328,7 +328,7 @@
 				}
 			}
 		},
-		"/SecurityTest": {
+		"/auth/query": {
 			"get": {
 				"operationId": "GetWithApi",
 				"responses": {
@@ -353,6 +353,9 @@
 						}
 					}
 				},
+				"tags": [
+					"Auth 用户授权登录模块"
+				],
 				"security": [
 					{
 						"api_key": []
@@ -361,7 +364,7 @@
 				"parameters": []
 			}
 		},
-		"/SecurityTest/auth": {
+		"/auth/header": {
 			"get": {
 				"operationId": "GetWithToken",
 				"responses": {
@@ -386,6 +389,9 @@
 						}
 					}
 				},
+				"tags": [
+					"Auth 用户授权登录模块"
+				],
 				"security": [
 					{
 						"authorization": []
