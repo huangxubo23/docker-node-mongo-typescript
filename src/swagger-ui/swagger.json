@@ -8,18 +8,17 @@
 		"schemas": {
 			"Item": {
 				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double",
-						"description": "商品ID"
-					},
 					"name": {
 						"type": "string",
 						"description": "商品名称"
 					},
 					"platform": {
-						"type": "number",
-						"format": "double"
+						"type": "string",
+						"enum": [
+							"taobao",
+							"jd"
+						],
+						"description": "商品平台"
 					},
 					"date": {
 						"type": "string",
@@ -28,8 +27,8 @@
 					}
 				},
 				"required": [
-					"id",
 					"name",
+					"platform",
 					"date"
 				],
 				"type": "object",
@@ -85,6 +84,28 @@
 					"code",
 					"message",
 					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AddItem": {
+				"properties": {
+					"name": {
+						"type": "string",
+						"description": "商品名称"
+					},
+					"platform": {
+						"type": "string",
+						"enum": [
+							"taobao",
+							"jd"
+						],
+						"description": "商品平台"
+					}
+				},
+				"required": [
+					"name",
+					"platform"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -242,6 +263,48 @@
 						"required": false,
 						"schema": {}
 					}
+				]
+			}
+		},
+		"/item/new": {
+			"post": {
+				"operationId": "AddItem",
+				"responses": {
+					"302": {
+						"description": "Redirect"
+					}
+				},
+				"tags": [
+					"Item 商品模块"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "formData",
+						"name": "name",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"in": "formData",
+						"name": "platform",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AddItem"
+							}
+						}
+					}
+				},
+				"consumes": [
+					"multipart/form-data",
+					"application/x-www-form-urlencoded"
 				]
 			}
 		},
