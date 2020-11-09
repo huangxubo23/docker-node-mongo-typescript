@@ -6,9 +6,23 @@
   ],
   "spec": {
     "outputDirectory": "src/swagger-ui",
-    "specVersion": 3
+    "specVersion": 3,
+    "securityDefinitions": {
+      "api_key": {
+        "type": "apiKey",
+        "name": "access_token",
+        "in": "query"
+      },
+      "authorization": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header"
+      }
+    }
   },
   "routes": {
-    "routesDir": "src"
+    "routesDir": "src",
+    "middleware": "express",
+    "authenticationModule": "src/authentication.ts"
   }
 }

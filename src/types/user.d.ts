@@ -9,6 +9,10 @@ export interface User {
   email: string;
   /**
    * 用户名
+   * @minLength 3
+   * @maxLength 20
+   * @pattern ^[a-zA-Z]+$
+   * @example "demoName"
    */
   name: string;
   /**

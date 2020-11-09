@@ -123,7 +123,11 @@
 					},
 					"name": {
 						"type": "string",
-						"description": "用户名"
+						"description": "用户名",
+						"example": "demoName",
+						"minLength": 3,
+						"maxLength": 20,
+						"pattern": "^[a-zA-Z]+$"
 					},
 					"status": {
 						"type": "string",
@@ -150,6 +154,24 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ErrorResponseModel": {
+				"properties": {
+					"status": {
+						"type": "number",
+						"format": "double"
+					},
+					"message": {
+						"type": "string",
+						"minLength": 2
+					}
+				},
+				"required": [
+					"status",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"Pick_User.email-or-name-or-phoneNumbers_": {
 				"properties": {
 					"email": {
@@ -158,7 +180,11 @@
 					},
 					"name": {
 						"type": "string",
-						"description": "用户名"
+						"description": "用户名",
+						"example": "demoName",
+						"minLength": 3,
+						"maxLength": 20,
+						"pattern": "^[a-zA-Z]+$"
 					},
 					"phoneNumbers": {
 						"items": {
@@ -180,7 +206,18 @@
 				"$ref": "#/components/schemas/Pick_User.email-or-name-or-phoneNumbers_"
 			}
 		},
-		"securitySchemes": {}
+		"securitySchemes": {
+			"api_key": {
+				"type": "apiKey",
+				"name": "access_token",
+				"in": "query"
+			},
+			"authorization": {
+				"type": "apiKey",
+				"name": "Authorization",
+				"in": "header"
+			}
+		}
 	},
 	"info": {
 		"title": "docker-node-mongo-typescript",
@@ -278,20 +315,7 @@
 					"Item 商品模块"
 				],
 				"security": [],
-				"parameters": [
-					{
-						"in": "formData",
-						"name": "name",
-						"required": true,
-						"type": "string"
-					},
-					{
-						"in": "formData",
-						"name": "platform",
-						"required": true,
-						"type": "string"
-					}
-				],
+				"parameters": [],
 				"requestBody": {
 					"required": true,
 					"content": {
@@ -301,11 +325,73 @@
 							}
 						}
 					}
+				}
+			}
+		},
+		"/SecurityTest": {
+			"get": {
+				"operationId": "GetWithApi",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/User"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "Unexpected error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponseModel"
+								}
+							}
+						}
+					}
 				},
-				"consumes": [
-					"multipart/form-data",
-					"application/x-www-form-urlencoded"
-				]
+				"security": [
+					{
+						"api_key": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/SecurityTest/auth": {
+			"get": {
+				"operationId": "GetWithToken",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/User"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "Unexpected error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponseModel"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"authorization": []
+					}
+				],
+				"parameters": []
 			}
 		},
 		"/user/{userId}": {
