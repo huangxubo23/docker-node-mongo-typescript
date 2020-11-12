@@ -1,5 +1,5 @@
 {
-  "exec": "ts-node src/server.ts",
+  "exec": "npm run build:swagger && ts-node src/server.ts",
   "watch": ["src"],
   "ext": "ts",
   "ignore": ["src/routes.ts"]

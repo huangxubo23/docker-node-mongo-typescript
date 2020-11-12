@@ -6,10 +6,13 @@ import bodyParser from 'body-parser';
 import swaggerUi from 'swagger-ui-express';
 import { ValidateError } from 'tsoa';
 import { RegisterRoutes } from './routes';
+import log from './config/log';
+import { UncaughtExceptionError } from './error';
 
 import * as itemController from './controllers/item';
 
-const isDev = process.env.NODE_ENV === 'development';
+const isProd = process.env.NODE_ENV === 'production';
+
 console.info('==NODE_ENV==', process.env.NODE_ENV);
 
 const app = express();
@@ -21,20 +24,24 @@ app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(errorHandler());
 
+process.on('uncaughtException', (error) => {
+  log.error(new UncaughtExceptionError(error.message));
+});
+
 // Connect to MongoDB
 mongoose
   .connect(
     'mongodb://localhost:27017/mongo', // 'mongodb://mongo:27017/mongo',
     { useNewUrlParser: true }
   )
-  .then(() => console.log('MongoDB Connected'))
+  .then(() => log.info('MongoDB Connected'))
   .catch((err) => {
-    console.log(err);
+    log.error(err);
   });
 
 app.get('/', itemController.getItem);
 app.post('/item/add', itemController.addItem);
-if (isDev) {
+if (!isProd) {
   const swaggerDocument = require('./swagger-ui/swagger.json');
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
   app.use(
