@@ -3,7 +3,6 @@ import mongoose from 'mongoose';
 import path from 'path';
 import bodyParser from 'body-parser';
 import swaggerUi from 'swagger-ui-express';
-import morgan from 'morgan';
 import { RegisterRoutes } from './routes';
 import log, { createHttpLogger } from './config/log';
 import { UncaughtExceptionError, errorHandler } from './error';
@@ -21,7 +20,7 @@ app.set('views', path.join(__dirname, './views'));
 
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(morgan('short'));
+createHttpLogger(app);
 
 process.on('uncaughtException', (error) => {
   log.error(new UncaughtExceptionError(error.message));
@@ -55,8 +54,6 @@ if (!isProd) {
 }
 
 RegisterRoutes(app);
-
-createHttpLogger(app);
 
 app.use(errorHandler);
 

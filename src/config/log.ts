@@ -85,7 +85,9 @@ const createHttpLogger = (app: Application) => {
     }
   }
 
-  app.use(morgan('combined', { stream: httpLoggerStream }));
+  const logFormmat = ':date[iso] :method :url :req[header] :res[header] :status :response-time ms :total-time ms'
+  // combined, common, dev, short, tiny
+  app.use(morgan(logFormmat, { stream: httpLoggerStream }));
 }
 
 export {
