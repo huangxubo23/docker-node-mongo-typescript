@@ -1,7 +1,11 @@
-import winston from 'winston';
+import { Application } from 'express'
+import winston, { exitOnError, loggers } from 'winston';
+import morgan from 'morgan';
 import moment from 'moment';
 
-
+const ERROR_LOG_PATH = './logs/error.log';
+const COMBINED_LOG_PATH = './logs/combined.log';
+const HTTP_LOG_PATH = './logs/http.log';
 
 const createLogger = ({ level = 'info', moduleName = 'node-log' }) => {
   const logger = winston.createLogger({
@@ -13,11 +17,18 @@ const createLogger = ({ level = 'info', moduleName = 'node-log' }) => {
       // - Write all logs with level `info` and below to `combined.log`
       //
       new winston.transports.File({
-        filename: './logs/error.log',
+        filename: ERROR_LOG_PATH,
         level: 'error',
+        handleExceptions: true,
+        maxsize: 5242880, // 5MB
+        maxFiles: 5
       }),
-      new winston.transports.File({ filename: './logs/combined.log' }),
+      new winston.transports.File({
+        filename: COMBINED_LOG_PATH,
+        handleExceptions: true
+      }),
     ],
+    exitOnError: false,
     format: winston.format.combine(
       winston.format.label({
         label: moduleName,
@@ -48,3 +59,35 @@ const createLogger = ({ level = 'info', moduleName = 'node-log' }) => {
 const log = createLogger({ level: 'info', moduleName: 'node-logger' });
 
 export default log;
+
+
+const createHttpLogger = (app: Application) => {
+  const httpLogger = winston.createLogger({
+    transports: [
+      new winston.transports.File({
+        level: 'info',
+        filename: HTTP_LOG_PATH,
+        handleExceptions: true,
+        maxsize: 1048576, // 1MB
+        maxFiles: 2,
+      }),
+      new winston.transports.Console({
+        level: 'debug',
+        handleExceptions: true,
+      })
+    ],
+    exitOnError: false
+  })
+  
+  const httpLoggerStream = {
+    write: (message: string) => {
+      httpLogger.info(message)
+    }
+  }
+
+  app.use(morgan('combined', { stream: httpLoggerStream }));
+}
+
+export {
+  createHttpLogger
+}
