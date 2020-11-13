@@ -5,6 +5,7 @@ import {
   Path,
   Post,
   Put,
+  Patch,
   Delete,
   Query,
   Route,
@@ -12,7 +13,8 @@ import {
   Tags,
 } from 'tsoa';
 import { User, UserCreationParams } from '../types/user';
-import { UsersService } from '../services/user';
+import { UserService } from '../services/user';
+import { formatSuccessResponse, CommonResponse } from '../config/response';
 
 @Route('user')
 @Tags('User 用户模块')
@@ -27,7 +29,7 @@ export class UserController extends Controller {
     @Path() userId: number,
     @Query() name?: string
   ): Promise<User> {
-    return new UsersService().get(userId, name);
+    return new UserService().get(userId, name);
   }
 
   /**
@@ -37,13 +39,8 @@ export class UserController extends Controller {
   @Delete('{userId}')
   public async deleteUser(
     @Path() userId: number
-  ): Promise<any> {
-    return {
-      success: true,
-      message: '删除用户成功',
-      code: 10000,
-      data: { userId }
-    }
+  ): Promise<CommonResponse<number>> {
+    return formatSuccessResponse(userId);
   }
 
   /**
@@ -55,13 +52,21 @@ export class UserController extends Controller {
   public async updateUser(
     @Path() userId: number,
     @Body() requestBody: UserCreationParams
-  ): Promise<any> {
-    return {
-      success: true,
-      message: '修改用户成功',
-      code: 10000,
-      data: { userId, requestBody }
-    }
+  ): Promise<CommonResponse<{ userId: number } & UserCreationParams>> {
+    return formatSuccessResponse({ userId, ...requestBody });
+  }
+
+  /**
+   * 修改用户名称
+   * @param userId 用户ID
+   * @param userName 用户名称
+   */
+  @Patch('{userId}')
+  public async patchUser(
+    @Path() userId: number,
+    @Query() userName: string
+  ): Promise<CommonResponse<{ userId: number } & UserCreationParams>> {
+    return formatSuccessResponse({ userId, userName });
   }
 
   /**
@@ -73,7 +78,7 @@ export class UserController extends Controller {
     @Body() requestBody: UserCreationParams
   ): Promise<void> {
     this.setStatus(201); // set return status 201
-    new UsersService().create(requestBody);
+    new UserService().create(requestBody);
     return;
   }
 }

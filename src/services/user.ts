@@ -1,6 +1,6 @@
 import { User, UserCreationParams } from '../types/user';
 
-export class UsersService {
+export class UserService {
   public get(id: number, name?: string): User {
     return {
       id,

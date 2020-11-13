@@ -81,6 +81,17 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CommonResponse_number_": {
+        "dataType": "refObject",
+        "properties": {
+            "success": {"dataType":"boolean","required":true},
+            "code": {"dataType":"double","required":true},
+            "message": {"dataType":"string","required":true},
+            "data": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Pick_User.email-or-name-or-phoneNumbers_": {
         "dataType": "refAlias",
         "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"email":{"dataType":"string","required":true},"name":{"dataType":"string","required":true,"validators":{"minLength":{"value":3},"maxLength":{"value":20},"pattern":{"value":"^[a-zA-Z]+$"}}},"phoneNumbers":{"dataType":"array","array":{"dataType":"string"},"required":true}},"validators":{}},
@@ -89,6 +100,17 @@ const models: TsoaRoute.Models = {
     "UserCreationParams": {
         "dataType": "refAlias",
         "type": {"ref":"Pick_User.email-or-name-or-phoneNumbers_","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CommonResponse__userId-number_-and-UserCreationParams_": {
+        "dataType": "refObject",
+        "properties": {
+            "success": {"dataType":"boolean","required":true},
+            "code": {"dataType":"double","required":true},
+            "message": {"dataType":"string","required":true},
+            "data": {"dataType":"intersection","subSchemas":[{"dataType":"nestedObjectLiteral","nestedProperties":{"userId":{"dataType":"double","required":true}}},{"ref":"UserCreationParams"}],"required":true},
+        },
+        "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
@@ -149,7 +171,6 @@ export function RegisterRoutes(app: express.Router) {
         app.post('/item/new',
             function (request: any, response: any, next: any) {
             const args = {
-                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
                     requestBody: {"in":"body","name":"requestBody","required":true,"ref":"AddItem"},
             };
 
@@ -280,6 +301,29 @@ export function RegisterRoutes(app: express.Router) {
 
 
             const promise = controller.updateUser.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.patch('/user/:userId',
+            function (request: any, response: any, next: any) {
+            const args = {
+                    userId: {"in":"path","name":"userId","required":true,"dataType":"double"},
+                    userName: {"in":"query","name":"userName","required":true,"dataType":"string"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new UserController();
+
+
+            const promise = controller.patchUser.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

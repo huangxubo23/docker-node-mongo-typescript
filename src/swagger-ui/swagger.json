@@ -173,6 +173,32 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"CommonResponse_number_": {
+				"properties": {
+					"success": {
+						"type": "boolean"
+					},
+					"code": {
+						"type": "number",
+						"format": "double"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"success",
+					"code",
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"Pick_User.email-or-name-or-phoneNumbers_": {
 				"properties": {
 					"email": {
@@ -205,6 +231,47 @@
 			},
 			"UserCreationParams": {
 				"$ref": "#/components/schemas/Pick_User.email-or-name-or-phoneNumbers_"
+			},
+			"CommonResponse__userId-number_-and-UserCreationParams_": {
+				"properties": {
+					"success": {
+						"type": "boolean"
+					},
+					"code": {
+						"type": "number",
+						"format": "double"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"allOf": [
+							{
+								"properties": {
+									"userId": {
+										"type": "number",
+										"format": "double"
+									}
+								},
+								"required": [
+									"userId"
+								],
+								"type": "object"
+							},
+							{
+								"$ref": "#/components/schemas/UserCreationParams"
+							}
+						]
+					}
+				},
+				"required": [
+					"success",
+					"code",
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {
@@ -319,6 +386,7 @@
 						}
 					}
 				},
+				"description": "添加商品",
 				"tags": [
 					"Item 商品模块"
 				],
@@ -457,7 +525,9 @@
 						"description": "Ok",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {
+									"$ref": "#/components/schemas/CommonResponse_number_"
+								}
 							}
 						}
 					}
@@ -487,7 +557,9 @@
 						"description": "Ok",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {
+									"$ref": "#/components/schemas/CommonResponse__userId-number_-and-UserCreationParams_"
+								}
 							}
 						}
 					}
@@ -520,6 +592,47 @@
 						}
 					}
 				}
+			},
+			"patch": {
+				"operationId": "PatchUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonResponse__userId-number_-and-UserCreationParams_"
+								}
+							}
+						}
+					}
+				},
+				"description": "修改用户名称",
+				"tags": [
+					"User 用户模块"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "用户ID",
+						"in": "path",
+						"name": "userId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "用户名称",
+						"in": "query",
+						"name": "userName",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		},
 		"/user/add": {
