@@ -1,5 +1,3 @@
-import { ItemDocument } from '../models/Item'
-
 export enum ItemPlatform {
   /**
    * 淘宝
@@ -27,7 +25,7 @@ export interface Item {
   /**
    * 创建时间
    */
-  date: Date;
+  date?: Date;
 }
 
 export interface AddItem {

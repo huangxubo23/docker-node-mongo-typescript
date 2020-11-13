@@ -1,8 +1,7 @@
 import mongoose from 'mongoose';
-import { Item as IItem } from '../types/item'
+import { Item } from '../types/item';
 
-
-export type ItemDocument = mongoose.Document & IItem
+export type ItemDocument = mongoose.Document & Item;
 
 const ItemSchema = new mongoose.Schema({
   // id: {
@@ -21,7 +20,7 @@ const ItemSchema = new mongoose.Schema({
   date: {
     type: Date,
     default: Date.now,
-  }
-})
+  },
+});
 
-export const Item = mongoose.model<ItemDocument>('Item', ItemSchema);
+export const ItemModel = mongoose.model<ItemDocument>('Item', ItemSchema);

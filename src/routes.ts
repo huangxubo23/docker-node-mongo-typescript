@@ -19,7 +19,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "name": {"dataType":"string","required":true},
             "platform": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["taobao"]},{"dataType":"enum","enums":["jd"]}],"required":true},
-            "date": {"dataType":"datetime","required":true},
+            "date": {"dataType":"datetime"},
         },
         "additionalProperties": false,
     },
@@ -40,13 +40,13 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "CommonResponse_any_": {
+    "CommonResponse_Item_": {
         "dataType": "refObject",
         "properties": {
             "success": {"dataType":"boolean","required":true},
             "code": {"dataType":"double","required":true},
             "message": {"dataType":"string","required":true},
-            "data": {"dataType":"any","required":true},
+            "data": {"ref":"Item","required":true},
         },
         "additionalProperties": false,
     },
@@ -127,7 +127,7 @@ export function RegisterRoutes(app: express.Router) {
         app.get('/item/detail',
             function (request: any, response: any, next: any) {
             const args = {
-                    id: {"in":"query","name":"id","dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"string"}]},
+                    id: {"in":"query","name":"id","required":true,"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"string"}]},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

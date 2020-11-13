@@ -11,8 +11,14 @@
 <body>
   <h1>My Node App</h1>
   <form method="post" action="/item/add">
-    <label for="name">Name</label>
+    <label for="name">Name:</label>
     <input type="text" name="name">
+    &nbsp;&nbsp;
+    <label for="platform">Platform:</label>
+    <select name="platform">
+      <option value="taobao">淘宝</option>
+      <option value="jd">京东</option>
+    </select>
     <input type="submit" value="Add">
   </form>
   <h4>Items:</h4>

@@ -16,13 +16,15 @@ import {
 
 import { Request as ExRequest, Response as ExResponse } from 'express';
 import { WriteError } from 'mongodb';
-import { Item } from '../models/Item';
-
-import { Item as IItem, ItemList, AddItem } from '../types/item';
-import { CommonResponse } from '../types/common';
+import { StatusCodes } from 'http-status-codes';
+import { ItemModel } from '../models/item';
+import log from '../config/log';
+import { formatSuccessResponse, formatErrorResponse, CommonResponse, ErrorResponse } from '../config/response';
+import Code from '../config/code';
+import { Item, ItemList, AddItem } from '../types/item';
 
 export const getItem = (req: ExRequest, res: ExResponse) => {
-  Item.find()
+  ItemModel.find()
     .then((items) => {
       res.render('index', { items });
     })
@@ -31,13 +33,24 @@ export const getItem = (req: ExRequest, res: ExResponse) => {
     });
 };
 
-export const addItem = (req: ExRequest, res: ExResponse) => {
-  const newItem = new Item({
-    name: req.body.name,
-    platform: req.body.platform
-  });
-
-  newItem.save().then((item) => res.redirect('/'));
+export const addItem = async (req: ExRequest, res: ExResponse) => {
+  try {
+    const newItem = new ItemModel({
+      name: req.body.name,
+      platform: req.body.platform
+    });
+    await newItem.save();
+    res.redirect('/');
+  } catch (error) {
+    log.error(error)
+    // 500
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(
+      new ErrorResponse({
+        code: Code.INTERNAL_SERVER_ERROR,
+        data: error
+      })
+    )
+  }
 };
 
 @Tags('Item 商品模块')
@@ -54,7 +67,7 @@ export class ItemController extends Controller {
     @Query() name?: string
   ): Promise<CommonResponse<ItemList>> {
     try {
-      const items = await Item.find();
+      const items = await ItemModel.find();
       return {
         success: true,
         message: '调用成功',
@@ -70,28 +83,24 @@ export class ItemController extends Controller {
    */
   @Get('detail')
   public async getDetail(
-    @Query() id?: number | string
-  ): Promise<CommonResponse<any>> {
+    @Query() id: number | string
+  ): Promise<CommonResponse<Item>> {
     try {
-      const items = await Item.find();
-      return {
-        success: true,
-        message: '调用成功',
-        code: 10000,
-        data: items[0],
-      };
+      const items = await ItemModel.find();
+      return formatSuccessResponse(items[0]);
     } catch (error) {}
   }
 
   @Post('new')
-  @SuccessResponse(302, 'Redirect')
-  public async addItem(@Request() req: ExRequest,  @Body() requestBody: AddItem) {
+  public async addItem(@Request() req: ExRequest, @Body() requestBody: AddItem) : Promise<CommonResponse<Item>> {
     try {
-      const newItem = new Item(requestBody);
+      const newItem = new ItemModel(requestBody);
       const item = await newItem.save();
-      console.info('==item==', item)
-    } finally {
-      req.res.redirect('/');
+      // req.res.status(StatusCodes.OK).send(formatSuccessResponse(item))
+      return formatSuccessResponse(item)
+    } catch (error) {
+      req.res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(formatErrorResponse(error))
+      log.error(error)
     }
   }
 }

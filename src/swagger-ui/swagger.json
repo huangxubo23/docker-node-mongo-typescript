@@ -28,8 +28,7 @@
 				},
 				"required": [
 					"name",
-					"platform",
-					"date"
+					"platform"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -65,7 +64,7 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"CommonResponse_any_": {
+			"CommonResponse_Item_": {
 				"properties": {
 					"success": {
 						"type": "boolean"
@@ -77,7 +76,9 @@
 					"message": {
 						"type": "string"
 					},
-					"data": {}
+					"data": {
+						"$ref": "#/components/schemas/Item"
+					}
 				},
 				"required": [
 					"success",
@@ -281,7 +282,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CommonResponse_any_"
+									"$ref": "#/components/schemas/CommonResponse_Item_"
 								}
 							}
 						}
@@ -297,7 +298,7 @@
 						"description": "商品ID",
 						"in": "query",
 						"name": "id",
-						"required": false,
+						"required": true,
 						"schema": {}
 					}
 				]
@@ -307,8 +308,15 @@
 			"post": {
 				"operationId": "AddItem",
 				"responses": {
-					"302": {
-						"description": "Redirect"
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonResponse_Item_"
+								}
+							}
+						}
 					}
 				},
 				"tags": [

@@ -1,13 +1,11 @@
 import express, { Request, Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
-import errorHandler from 'errorhandler';
 import path from 'path';
 import bodyParser from 'body-parser';
 import swaggerUi from 'swagger-ui-express';
-import { ValidateError } from 'tsoa';
 import { RegisterRoutes } from './routes';
 import log from './config/log';
-import { UncaughtExceptionError } from './error';
+import { UncaughtExceptionError, errorHandler } from './error';
 
 import * as itemController from './controllers/item';
 
@@ -22,7 +20,6 @@ app.set('views', path.join(__dirname, './views'));
 
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(errorHandler());
 
 process.on('uncaughtException', (error) => {
   log.error(new UncaughtExceptionError(error.message));
@@ -53,34 +50,11 @@ if (!isProd) {
       );
     }
   );
-  // app.use(errorHandler())
 }
 
 RegisterRoutes(app);
 
-app.use(
-  (
-    err: any,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Response | void => {
-    if (err instanceof ValidateError) {
-      console.warn(`Caught Validation Error for ${req.path}:`, err.fields);
-      return res.status(422).json({
-        message: 'Validation Failed',
-        data: err?.fields,
-      });
-    }
-    if (err instanceof Error) {
-      return res.status(500).json({
-        message: 'Internal Server Error',
-        data: err,
-      });
-    }
+app.use(errorHandler);
 
-    next();
-  }
-);
 
 export default app;
