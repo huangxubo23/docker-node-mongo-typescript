@@ -5,6 +5,7 @@ import { StatusCodes } from 'http-status-codes'
 import log from '../config/log';
 import Code from '../config/code';
 import { ErrorResponse } from '../config/response';
+import { CustomError } from '../error'
 
 const errorHandler = (
   err: unknown,
@@ -24,11 +25,21 @@ const errorHandler = (
     );
   } else if (err instanceof MongooseError && err.name === 'ValidationError') {
     // 422 - Mongoose ValidationError
-    log.error('Mongoose ValidationError')
+    log.error(`Mongoose ValidationError: ${JSON.stringify(err)}`)
     return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json(
       new ErrorResponse({
         code: Code.VALIDATION_FAILED,
         data: err?.message,
+      })
+    );
+  } else if (err instanceof CustomError) {
+    // 422 - Tsoa ValidateError
+    log.error(`CustomError - ${err.name}: ${JSON.stringify(err)}`)
+    const { code, message, statusCode } = err
+    return res.status(statusCode).json(
+      new ErrorResponse({
+        code,
+        data: message,
       })
     );
   } else if (err instanceof Error) {

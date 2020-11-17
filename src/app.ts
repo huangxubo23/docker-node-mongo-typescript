@@ -23,14 +23,25 @@ app.use(bodyParser.json());
 createHttpLogger(app);
 
 process.on('uncaughtException', (error) => {
+  log.info('==uncaughtException==');
   log.error(new UncaughtExceptionError(error.message));
+});
+
+process.on('unhandledRejection', (error: any) => {
+  log.info('==unhandledRejection==');
+  log.error(new UncaughtExceptionError(error.message || error.name));
 });
 
 // Connect to MongoDB
 mongoose
   .connect(
     'mongodb://localhost:27017/mongo', // 'mongodb://mongo:27017/mongo',
-    { useNewUrlParser: true }
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true,
+      useFindAndModify: false,
+    }
   )
   .then(() => log.info('MongoDB Connected'))
   .catch((err) => {
@@ -42,15 +53,11 @@ app.post('/item/add', itemController.addItem);
 if (!isProd) {
   const swaggerDocument = require('./swagger-ui/swagger.json');
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-  app.use(
-    '/docs',
-    swaggerUi.serve,
-    async (_req: Request, res: Response) => {
-      return res.send(
-        swaggerUi.generateHTML(await import('./swagger-ui/swagger.json'))
-      );
-    }
-  );
+  app.use('/docs', swaggerUi.serve, async (_req: Request, res: Response) => {
+    return res.send(
+      swaggerUi.generateHTML(await import('./swagger-ui/swagger.json'))
+    );
+  });
 }
 
 RegisterRoutes(app);

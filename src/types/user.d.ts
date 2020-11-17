@@ -1,28 +1,64 @@
 export interface User {
   /**
-   * 用户ID
-   */
-  id: number;
-  /**
-   * 用户邮箱
-   */
-  email: string;
-  /**
    * 用户名
    * @minLength 3
    * @maxLength 20
-   * @pattern ^[a-zA-Z]+$
    * @example "demoName"
    */
-  name: string;
+  userName: string;
+  // /**
+  //  * 密码
+  //  * @minLength 6
+  //  * @maxLength 30
+  //  */
+  // password: string;
   /**
-   * 用户状态
+   * 昵称
+   * @minLength 3
+   * @maxLength 50
    */
-  status?: 'online' | 'offline';
+  nickName?: string;
   /**
-   * 用户手机号码
+   * 手机号
+   * @pattern ^1[3-9]\d{9}$
    */
-  phoneNumbers: string[];
+  phone: string;
+  /**
+   * 邮箱
+   */
+  email?: string;
 }
 
-export type UserCreationParams = Pick<User, 'email' | 'name' | 'phoneNumbers'>;
+export interface UserRegisterParams extends User {
+  /**
+   * 密码
+   * @minLength 6
+   * @maxLength 30
+   */
+  password: string;
+}
+
+export type UserLoginParams = Pick<UserRegisterParams, 'userName' | 'password'>;
+
+export type UserCreationParams = Pick<UserRegisterParams, 'userName' | 'password'>;
+
+export type UserPatchParams = Pick<User, 'nickName' | 'email'> & { 
+  /**
+   * 手机号
+   * @pattern ^1[3-9]\d{9}$
+   */
+  phone?: string
+};
+
+export type UserUpdateParams = Pick<User, 'phone'> & { 
+  // /**
+  //  * 昵称
+  //  * @minLength 3
+  //  * @maxLength 50
+  //  */
+  nickName: string;
+  /**
+   * 邮箱
+   */
+  email: string;
+};

@@ -26,7 +26,6 @@ import {
 } from '../config/response';
 import Code from '../config/code';
 import { Item, ItemList, AddItem } from '../types/item';
-import { ValidationError } from '../error';
 
 export const getItem = (req: ExRequest, res: ExResponse) => {
   ItemModel.find()
@@ -72,12 +71,7 @@ export class ItemController extends Controller {
     @Query() name?: string
   ): Promise<CommonResponse<ItemList>> {
     const items = await ItemModel.find();
-    return {
-      success: true,
-      message: '调用成功',
-      code: 10000,
-      data: items,
-    };
+    return formatSuccessResponse(items);
   }
 
   /**

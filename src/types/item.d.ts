@@ -9,6 +9,8 @@ export enum ItemPlatform {
   'jd'
 }
 
+export type Platform = 'taobao' | 'jd';
+
 export interface Item {
   /**
    * 商品ID
@@ -21,7 +23,7 @@ export interface Item {
   /**
    * 商品平台
    */
-  platform: 'taobao' | 'jd';
+  platform: Platform;
   /**
    * 创建时间
    */
