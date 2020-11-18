@@ -19,13 +19,12 @@ import {
 } from 'tsoa';
 import { Request as ExRequest } from 'express';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 import { User, UserCreationParams, UserRegisterParams, UserLoginParams, UserPatchParams, UserUpdateParams } from '../types/user';
 import userService from '../services/user';
 import { formatSuccessResponse, CommonResponse } from '../config/response';
 import { ForbiddenError, ValidationError } from '../error';
 import Code from '../config/code';
-import { JWT_SECRET } from '../config'
+import Token from '../utils/token';
 
 @Route('user')
 @Tags('User 用户模块')
@@ -75,12 +74,12 @@ export class UserController extends Controller {
     if (!isPasswordValid) {
       throw new ValidationError('Password is invalid')
     }
-    const token = jwt.sign({
-      id: String(user._id),
-    }, JWT_SECRET)
+
+    const rtnUser = userService.formatUser(user);
+    const token = Token.sign(rtnUser);
     this.setHeader('authorization', token);
     return formatSuccessResponse({
-      user: userService.formatUser(user),
+      user: rtnUser,
       token
     });
   }

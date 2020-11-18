@@ -68,6 +68,7 @@ const models: TsoaRoute.Models = {
     "User": {
         "dataType": "refObject",
         "properties": {
+            "id": {"dataType":"string"},
             "userName": {"dataType":"string","required":true,"validators":{"minLength":{"value":3},"maxLength":{"value":20}}},
             "nickName": {"dataType":"string","validators":{"minLength":{"value":3},"maxLength":{"value":50}}},
             "phone": {"dataType":"string","required":true,"validators":{"pattern":{"value":"^1[3-9]\\d{9}$"}}},
@@ -99,6 +100,7 @@ const models: TsoaRoute.Models = {
     "UserRegisterParams": {
         "dataType": "refObject",
         "properties": {
+            "id": {"dataType":"string"},
             "userName": {"dataType":"string","required":true,"validators":{"minLength":{"value":3},"maxLength":{"value":20}}},
             "nickName": {"dataType":"string","validators":{"minLength":{"value":3},"maxLength":{"value":50}}},
             "phone": {"dataType":"string","required":true,"validators":{"pattern":{"value":"^1[3-9]\\d{9}$"}}},

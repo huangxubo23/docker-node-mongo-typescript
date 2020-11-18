@@ -1,5 +1,9 @@
 export interface User {
   /**
+   * 用户ID
+   */
+  id?: string;
+  /**
    * 用户名
    * @minLength 3
    * @maxLength 20

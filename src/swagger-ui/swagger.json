@@ -116,6 +116,10 @@
 			},
 			"User": {
 				"properties": {
+					"id": {
+						"type": "string",
+						"description": "用户ID"
+					},
 					"userName": {
 						"type": "string",
 						"description": "用户名",
@@ -191,6 +195,10 @@
 			},
 			"UserRegisterParams": {
 				"properties": {
+					"id": {
+						"type": "string",
+						"description": "用户ID"
+					},
 					"userName": {
 						"type": "string",
 						"description": "用户名",

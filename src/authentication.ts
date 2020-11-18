@@ -1,11 +1,8 @@
-import * as express from 'express';
-import jwt from 'jsonwebtoken';
-import userService from './services/user';
-import { UnauthorizedExceptionError } from './error';
-import { JWT_SECRET } from './config';
+import { Request } from 'express';
+import Token from './utils/token';
 
 export async function expressAuthentication(
-  request: express.Request,
+  request: Request,
   securityName: string,
   scopes?: string[]
 ): Promise<any> {
@@ -20,25 +17,6 @@ export async function expressAuthentication(
       token = request.headers.authorization;
       break;
   }
-  console.info('==token==', token);
-
-  if (!token) {
-    throw new UnauthorizedExceptionError(`Verify user fail: token is ${token}`);
-  }
-
-  try {
-    const rawToken = String(token);
-    const tokenData: any = jwt.verify(rawToken, JWT_SECRET);
-    const userId = tokenData.id;
-    const user = await userService.findById(userId);
-    if (!user) {
-      throw new UnauthorizedExceptionError('Verify user fail: User not exit');
-    }
-
-    // (request as any).user = user;
-
-    return Promise.resolve(user);
-  } catch (error) {
-    throw new UnauthorizedExceptionError(`Verify user fail: ${error.message}`);
-  }
+  const user = await Token.check(token);
+  return Promise.resolve(user);
 }

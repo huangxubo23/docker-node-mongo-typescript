@@ -6,6 +6,7 @@ import swaggerUi from 'swagger-ui-express';
 import { RegisterRoutes } from './routes';
 import log, { createHttpLogger } from './config/log';
 import { UncaughtExceptionError, errorHandler } from './error';
+import redis from './utils/redis';
 
 import * as itemController from './controllers/item';
 
@@ -63,5 +64,7 @@ if (!isProd) {
 RegisterRoutes(app);
 
 app.use(errorHandler);
+
+redis.init();
 
 export default app;
