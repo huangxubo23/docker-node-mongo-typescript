@@ -1,5 +1,12 @@
 import { UserModel, UserDocument } from '../models/user';
-import { User as IUser, UserCreationParams, UserRegisterParams, UserPatchParams, UserUpdateParams } from '../types/user';
+import {
+  User as IUser,
+  UserPagination,
+  UserRegisterParams,
+  UserPatchParams,
+  UserUpdateParams,
+} from '../types/user';
+import { PaginationParams } from '../types/common';
 
 class BaseUser implements IUser {
   userName: string;
@@ -25,16 +32,38 @@ export class UserService {
     const res = await newUser.save();
     return this.formatUser(res);
   }
-  
+
   public async login(userName: string): Promise<UserDocument> {
     const user = await UserModel.findOne({
-      userName
-    })
-    return user
+      userName,
+    });
+    return user;
+  }
+
+  public async find({
+    currentPage,
+    pageSize,
+  }: PaginationParams): Promise<UserPagination> {
+    const users = await UserModel.find()
+      .limit(pageSize * 1)
+      .skip((currentPage - 1) * pageSize)
+      // .select('userName nickName -_id')
+      // .select({ userName: 1, nickName: 1, phone: 1, email: 1, _id: 0 })
+      .exec();
+
+    // get total documents in the collection
+    const total = await UserModel.countDocuments();
+
+    return {
+      currentPage,
+      pageSize,
+      total,
+      list: users.map((user) => this.formatUser(user)),
+    };
   }
 
   public async findById(userId: string): Promise<IUser> {
-    const user = await UserModel.findById(userId)
+    const user = await UserModel.findById(userId);
     return this.formatUser(user);
   }
 
@@ -53,9 +82,8 @@ export class UserService {
       await UserModel.findByIdAndDelete(userId);
       return true;
     } catch (error) {
-      throw new error;
+      throw error;
     }
-    
   }
 }
 

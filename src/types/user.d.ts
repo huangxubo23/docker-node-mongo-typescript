@@ -1,3 +1,4 @@
+import { Pagination } from './common';
 export interface User {
   /**
    * 用户ID
@@ -66,3 +67,5 @@ export type UserUpdateParams = Pick<User, 'phone'> & {
    */
   email: string;
 };
+
+export type UserPagination = Pagination<User>;

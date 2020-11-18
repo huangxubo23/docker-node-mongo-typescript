@@ -19,7 +19,7 @@ import {
 } from 'tsoa';
 import { Request as ExRequest } from 'express';
 import bcrypt from 'bcryptjs';
-import { User, UserCreationParams, UserRegisterParams, UserLoginParams, UserPatchParams, UserUpdateParams } from '../types/user';
+import { User, UserPagination, UserRegisterParams, UserLoginParams, UserPatchParams, UserUpdateParams } from '../types/user';
 import userService from '../services/user';
 import { formatSuccessResponse, CommonResponse } from '../config/response';
 import { ForbiddenError, ValidationError } from '../error';
@@ -29,6 +29,19 @@ import Token from '../utils/token';
 @Route('user')
 @Tags('User 用户模块')
 export class UserController extends Controller {
+  /**
+   * 用户列表
+   * @param currentPage 
+   * @param pageSize 
+   */
+  @Get('list')
+  public async list (
+    @Query() currentPage: number,
+    @Query() pageSize: number
+  ): Promise<CommonResponse<UserPagination>> {
+    const res = await userService.find({ currentPage, pageSize })
+    return formatSuccessResponse(res);
+  }
   /**
    * 用户注册
    */
